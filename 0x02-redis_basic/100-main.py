@@ -2,7 +2,6 @@
 
 import redis
 
-Web = __import__('web').Web
 
 red = redis.Redis()
 get_page = __import__('web').get_page
