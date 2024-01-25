@@ -10,13 +10,13 @@ from functools import wraps
 red = redis.Redis()
 
 
-def count_calls(method: typing.Callable) -> typing.Callable:
+def count_call(method: typing.Callable) -> typing.Callable:
     """This is used to count the number of funcion calls"""
     @wraps(method)
-    def wrapper(url):
+    def wrapp(url):
         red.incr(f"count:{url}")
         return method(url)
-    return wrapper
+    return wrapp
 
 
 def cache_page(method: typing.Callable) -> typing.Callable:
@@ -33,7 +33,7 @@ def cache_page(method: typing.Callable) -> typing.Callable:
     return wrapper
 
 
-@count_calls
+@count_call
 @cache_page
 def get_page(url: str) -> str:
     """Thisisi the function that gets the page"""
