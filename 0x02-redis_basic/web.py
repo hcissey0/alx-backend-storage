@@ -7,27 +7,37 @@ import typing
 from functools import wraps
 
 
+red = redis.Redis()
+
+
 def count_calls(method: typing.Callable) -> typing.Callable:
     """This is used to count the number of funcion calls"""
     @wraps(method)
-    def wrapper(self, *args, **kwargs):
-        self._redis.incr(f"count:{args[0]}")
-        return method(self, *args, **kwargs)
+    def wrapper(*args, **kwargs):
+        red.incr(f"count:{args[0]}")
+        return method(*args, **kwargs)
     return wrapper
 
 
 def cache_page(method: typing.Callable) -> typing.Callable:
     """Thisis used to cache th apge"""
     @wraps(method)
-    def wrapper(self, *args, **kwargs):
-        page = self._redis.get(args[0])
+    def wrapper(*args, **kwargs):
+        page = red.get(args[0])
         if page is not None:
             return page.decode('utf-8')
         else:
-            page = method(self, *args, **kwargs)
-            self._redis.setex(args[0], 10, page)
+            page = method(*args, **kwargs)
+            red.setex(args[0], 10, page)
             return page
     return wrapper
+
+
+@count_calls
+@cache_page
+def get_page(self, url: str) -> str:
+    """Thisisi the function that gets the page"""
+    return requests.get(url).text
 
 
 class Web:
