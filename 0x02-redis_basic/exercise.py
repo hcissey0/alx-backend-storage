@@ -73,10 +73,9 @@ class Cache:
 def replay(method: typing.Callable) -> None:
     """This is used to view the historyof the funciton"""
     key = method.__qualname__
-    inputs = cache._redis.lrange(f"{key}:inputs",
-            0, -1)
-    outputs = cache._redis.lrange(f"{key}:outputs",
-            0, -1)
+    self = method.__self__
+    inputs = self._redis.lrange(f"{key}:inputs", 0, -1)
+    outputs = self._redis.lrange(f"{key}:outputs", 0, -1)
 
     print(f"{key} was called {len(inputs)} times:")
     for _in, _out in zip(inputs, outputs):
