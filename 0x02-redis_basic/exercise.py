@@ -4,6 +4,20 @@
 import redis
 import uuid
 import typing
+from functools import wraps
+
+
+def count_calls(method: typing.Callable) -> typing.Callable:
+    """This method counts number of methods
+    called int the cache class"""
+    key = method.__qualname__
+
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        self._redis.incr(key)
+        return method(self, *args, **kwargs)
+
+    return wrapper
 
 
 class Cache:
@@ -14,6 +28,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: typing.Union[str, bytes, int, float]) -> str:
         """This is going to create a random key
         and save it nd return the key"""
