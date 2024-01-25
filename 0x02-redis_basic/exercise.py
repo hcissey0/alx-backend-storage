@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""This is the redis exercise file""""
+"""This is the redis exercise file"""
 
 import redis
 import uuid
