@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
+import redis
+
 Web = __import__('web').Web
 
-web = Web()
-url = 'http://slowwly.robertomurray.co.uk'
-text = web.get_page(url)
-print(text)
+red = redis.Redis()
+get_page = __import__('web').get_page
 
-print(web._redis.get(f'count:{url}'))
+url = 'http://slowwly.robertomurray.co.uk'
+
+print(get_page(url))
+print(red.get(f'count:{url}'))

@@ -13,29 +13,29 @@ red = redis.Redis()
 def count_calls(method: typing.Callable) -> typing.Callable:
     """This is used to count the number of funcion calls"""
     @wraps(method)
-    def wrapper(*args, **kwargs):
-        red.incr(f"count:{args[0]}")
-        return method(*args, **kwargs)
+    def wrapper(url):
+        red.incr(f"count:{url}")
+        return method(url)
     return wrapper
 
 
 def cache_page(method: typing.Callable) -> typing.Callable:
     """Thisis used to cache th apge"""
     @wraps(method)
-    def wrapper(*args, **kwargs):
-        page = red.get(args[0])
+    def wrapper(url):
+        page = red.get(url)
         if page is not None:
             return page.decode('utf-8')
         else:
-            page = method(*args, **kwargs)
-            red.setex(args[0], 10, page)
+            page = method(url)
+            red.setex(url, 10, page)
             return page
     return wrapper
 
 
 @count_calls
 @cache_page
-def get_page(self, url: str) -> str:
+def get_page(url: str) -> str:
     """Thisisi the function that gets the page"""
     return requests.get(url).text
 
