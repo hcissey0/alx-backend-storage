@@ -38,17 +38,3 @@ def cache_page(method: typing.Callable) -> typing.Callable:
 def get_page(url: str) -> str:
     """Thisisi the function that gets the page"""
     return requests.get(url).text
-
-
-class Web:
-    """This is the web cache class"""
-
-    def __init__(self):
-        """The initializor"""
-        self._redis = redis.Redis()
-
-    @count_calls
-    @cache_page
-    def get_page(self, url: str) -> str:
-        """Thisisi the function that gets the page"""
-        return requests.get(url).text
