@@ -68,3 +68,16 @@ class Cache:
         """This function is used to get integers"""
         val = self.get(key, fn=int)
         return val
+
+
+def replay(method: typing.Callable) -> None:
+    """This is used to view the historyof the funciton"""
+    key = method.__qualname__
+    inputs = cache._redis.lrange(f"{key}:inputs",
+            0, -1)
+    outputs = cache._redis.lrange(f"{key}:outputs",
+            0, -1)
+
+    print(f"{key} was called {len(inputs)} times:")
+    for _in, _out in zip(inputs, outputs):
+        print(f"{key}{_in.decote('utf-8')} -> {_out.decode('utf-8')}")
