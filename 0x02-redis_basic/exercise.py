@@ -79,4 +79,4 @@ def replay(method: typing.Callable) -> None:
 
     print(f"{key} was called {len(inputs)} times:")
     for _in, _out in zip(inputs, outputs):
-        print(f"{key}{_in.decote('utf-8')} -> {_out.decode('utf-8')}")
+        print(f"{key}{_in.decode('utf-8')} -> {_out.decode('utf-8')}")
