@@ -24,7 +24,7 @@ def cache_page(method: typing.Callable) -> typing.Callable:
         if page is not None:
             return page.decode('utf-8')
         else:
-            page = mehod(self, *args, **kwargs)
+            page = method(self, *args, **kwargs)
             self._redis.setex(args[0], 10, page)
             return page
     return wrapper
