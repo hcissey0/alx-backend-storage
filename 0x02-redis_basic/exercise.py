@@ -20,6 +20,19 @@ def count_calls(method: typing.Callable) -> typing.Callable:
     return wrapper
 
 
+def call_history(method: typing.Callable) -> typing.Callable:
+    """Thisis the call history"""
+    key = method.__qualname__
+
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        self._redis.rpush(f"{key}:inputs", str(args))
+        res = method(self, *args, **kwargs)
+        self._redis.rpush(f"{key}:outputs", str(res))
+        return res
+    return wrapper
+
+
 class Cache:
     """This is the redis class"""
 
@@ -28,6 +41,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @call_history
     @count_calls
     def store(self, data: typing.Union[str, bytes, int, float]) -> str:
         """This is going to create a random key
