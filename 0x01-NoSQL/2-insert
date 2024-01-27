@@ -1,2 +1,2 @@
 // This is used to insert in a database
-db.school.insertOne({ name: "Holberton school" })
+db.school.insert({ name: "Holberton school" })
