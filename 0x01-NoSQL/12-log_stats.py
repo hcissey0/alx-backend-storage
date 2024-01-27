@@ -12,6 +12,8 @@ if __name__ == "__main__":
 
     print('Methods:')
     for meth in methods:
-        print(f'\tmethod {meth}: {logs.count_documents({"method": meth})}')
+        print(f'    method {meth}: {logs.count_documents({"method": meth})}')
 
-    print(f'{logs.count)_documents({"method": "GET", "path": "/status"})} status check')
+    num = logs.count_documents({"method": "GET", "spath": "/status"})
+    print(
+        f'{num} status check')
